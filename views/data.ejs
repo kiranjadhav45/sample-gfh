@@ -1,0 +1,148 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+	<title>Login Register App</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+	<div class="col-md-4 col-md-offset-4 form-card">
+		<div>
+			<p>Profile Detail</p>
+		</div>
+		<div>
+			<center>
+				<table class="table table-hover text-center">
+					<tr>
+						<td>Name </td>
+						<td>
+							<%= name %>
+						</td>
+					</tr>
+					<tr>
+						<td>Email </td>
+						<td>
+							<%= email %>
+						</td>
+					</tr>
+				</table>
+			</center>
+		</div>
+		<div class="abc" id="LangTable">
+			<a href="/logout">Logout</a>
+		</div>
+	</div>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CRUD Application</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <h1>CRUD Application</h1>
+
+    <!-- Form for creating new items -->
+    <h2>Create Item</h2>
+    <form id="create-form">
+      <input type="text" id="name" placeholder="Name" required />
+      <input type="text" id="description" placeholder="Description" required />
+      <button type="submit">Create</button>
+    </form>
+
+    <!-- Table for displaying existing items -->
+    <h2>Items</h2>
+    <table id="items-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="items-body"></tbody>
+    </table>
+
+    <!-- JavaScript code -->
+    <script>
+      // Function to load items on page load
+      function loadItems() {
+        $.ajax({
+          url: "/api/items", // Replace with your API endpoint
+          type: "GET",
+          success: function (response) {
+            // Clear existing items
+            $("#items-body").empty();
+
+            // Loop through items and add them to the table
+            for (var i = 0; i < response.length; i++) {
+              var item = response[i];
+              var row =
+                '<tr data-id="' +
+                item.id +
+                '">' +
+                "<td>" +
+                item.name +
+                "</td>" +
+                "<td>" +
+                item.description +
+                "</td>" +
+                "<td>" +
+                '<button class="edit">Edit</button>' +
+                '<button class="delete">Delete</button>' +
+                "</td>" +
+                "</tr>";
+
+              $("#items-body").append(row);
+            }
+          },
+        });
+      }
+
+      // Load items on page load
+      loadItems();
+
+      // Create new item
+      $("#create-form").submit(function (event) {
+        event.preventDefault();
+
+        var name = $("#name").val();
+        var description = $("#description").val();
+
+        $.ajax({
+          url: "/api/items", // Replace with your API endpoint
+          type: "POST",
+          data: { name: name, description: description },
+          success: function () {
+            // Clear form
+            $("#name").val("");
+            $("#description").val("");
+
+            // Reload items
+            loadItems();
+          },
+        });
+      });
+
+      // Edit or Delete item
+      $("#items-body").on("click", ".edit", function () {
+        var row = $(this).closest("tr");
+        var itemId = row.data("id");
+
+        // Handle edit action
+        // ...
+
+        // Handle delete action
+        // ...
+      });
+    </script>
+  </body>
+</html>
